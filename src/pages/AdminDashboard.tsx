@@ -34,10 +34,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, setPro
       id: Date.now().toString(),
       name: 'New Product',
       category: 'Accessories',
-      price: 0,
+      originalPrice: 0,
+      discountedPrice: 0,
       image: '/images/organizer.svg',
       description: 'New product description',
       inStock: true,
+      stockQuantity: 0,
     };
     setProducts([...products, newProduct]);
   };
@@ -93,31 +95,58 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ products, setPro
                 </td>
                 <td>
                   {editingId === product.id ? (
-                    <input
-                      type="number"
-                      value={formData.price || 0}
-                      onChange={(e) =>
-                        setFormData({ ...formData, price: parseFloat(e.target.value) })
-                      }
-                    />
+                    <>
+                      <input
+                        type="number"
+                        value={formData.originalPrice || 0}
+                        onChange={(e) =>
+                          setFormData({ ...formData, originalPrice: parseFloat(e.target.value) })
+                        }
+                        placeholder="Original"
+                      />
+                      <input
+                        type="number"
+                        value={formData.discountedPrice || 0}
+                        onChange={(e) =>
+                          setFormData({ ...formData, discountedPrice: parseFloat(e.target.value) })
+                        }
+                        placeholder="Discounted"
+                      />
+                    </>
                   ) : (
-                    `₹${product.price}`
+                    <>
+                      {product.discountedPrice < product.originalPrice ? (
+                        <span>
+                          <s>₹{product.originalPrice}</s> <strong>₹{product.discountedPrice}</strong>
+                        </span>
+                      ) : (
+                        `₹${product.originalPrice}`
+                      )}
+                    </>
                   )}
                 </td>
                 <td>
                   {editingId === product.id ? (
-                    <select
-                      value={formData.inStock ? 'in-stock' : 'out-of-stock'}
-                      onChange={(e) =>
-                        setFormData({ ...formData, inStock: e.target.value === 'in-stock' })
-                      }
-                    >
-                      <option value="in-stock">In Stock</option>
-                      <option value="out-of-stock">Out of Stock</option>
-                    </select>
+                    <>
+                      <input
+                        type="number"
+                        value={formData.stockQuantity || 0}
+                        onChange={(e) => setFormData({ ...formData, stockQuantity: parseInt(e.target.value, 10) })}
+                        placeholder="Quantity"
+                      />
+                      <select
+                        value={formData.inStock ? 'in-stock' : 'out-of-stock'}
+                        onChange={(e) =>
+                          setFormData({ ...formData, inStock: e.target.value === 'in-stock' })
+                        }
+                      >
+                        <option value="in-stock">In Stock</option>
+                        <option value="out-of-stock">Out of Stock</option>
+                      </select>
+                    </>
                   ) : (
                     <span className={product.inStock ? 'in-stock' : 'out-of-stock'}>
-                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                      {product.inStock ? `In Stock (${product.stockQuantity ?? '—'})` : 'Out of Stock'}
                     </span>
                   )}
                 </td>
