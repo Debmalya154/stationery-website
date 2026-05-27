@@ -5,9 +5,10 @@ import { Product } from '../types/Product';
 
 interface CatalogProps {
   products: Product[];
+  onAddToCart: (product: Product) => void;
 }
 
-export const Catalog: React.FC<CatalogProps> = ({ products }) => {
+export const Catalog: React.FC<CatalogProps> = ({ products, onAddToCart }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [sortBy, setSortBy] = useState('');
@@ -72,7 +73,7 @@ export const Catalog: React.FC<CatalogProps> = ({ products }) => {
           <h2>New Arrivals</h2>
           <div className="products-grid">
             {newArrivals.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} onAddToCart={onAddToCart} />
             ))}
           </div>
         </section>
@@ -83,7 +84,7 @@ export const Catalog: React.FC<CatalogProps> = ({ products }) => {
           <h2>Clearance Sale</h2>
           <div className="products-grid">
             {clearanceItems.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} onAddToCart={onAddToCart} />
             ))}
           </div>
         </section>
@@ -92,7 +93,7 @@ export const Catalog: React.FC<CatalogProps> = ({ products }) => {
       <div className="products-grid">
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard key={product.id} product={product} onAddToCart={onAddToCart} />
           ))
         ) : (
           <div className="no-products">No products found</div>

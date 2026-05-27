@@ -3,9 +3,10 @@ import { Product } from '../types/Product';
 
 interface ProductCardProps {
   product: Product;
+  onAddToCart?: (product: Product) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onAddToCart }) => {
   const discountPercent =
     product.originalPrice && product.discountedPrice
       ? Math.round(((product.originalPrice - product.discountedPrice) / product.originalPrice) * 100)
@@ -37,8 +38,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <span className="price">₹{product.originalPrice}</span>
             )}
           </div>
-          <button disabled={!product.inStock} className="add-btn">
-            {product.inStock ? 'View Details' : 'Unavailable'}
+          <button
+            disabled={!product.inStock}
+            className="add-btn"
+            onClick={() => onAddToCart && onAddToCart(product)}
+          >
+            {product.inStock ? 'Add to Cart' : 'Unavailable'}
           </button>
         </div>
       </div>
